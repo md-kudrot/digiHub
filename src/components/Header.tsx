@@ -40,12 +40,18 @@ export default function Header() {
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex items-center gap-4">
-                        <button className="px-6 py-2 rounded-xl text-[#c0c1ff] font-bold hover:bg-[#1b1b23] transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]">
+                        <Link
+                            href={"login"}
+                            className="px-6 py-2 rounded-xl text-[#c0c1ff] font-bold hover:bg-[#1b1b23] transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                        >
                             Login
-                        </button>
-                        <button className="px-6 py-2 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]">
+                        </Link>
+                        <Link
+                            href={"register"}
+                            className="px-6 py-2 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                        >
                             Register
-                        </button>
+                        </Link>
                     </div>
                     <button
                         className="md:hidden text-[#c0c1ff] p-2 cursor-pointer"
@@ -103,12 +109,18 @@ export default function Header() {
                         Categories
                     </Link>
                     <div className="flex cursor-pointer flex-col gap-3 mt-2 border-t border-[#464554]/30 pt-4">
-                        <button className="w-full px-6 py-3 rounded-xl text-[#c0c1ff] font-bold hover:bg-[#1b1b23] transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]">
+                        <Link
+                            href={"/login"}
+                            className="w-full px-6 py-3 rounded-xl text-[#c0c1ff] font-bold hover:bg-[#1b1b23] transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                        >
                             Login
-                        </button>
-                        <button className="w-full px-6 py-3 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]">
+                        </Link>
+                        <Link
+                            href={"/register"}
+                            className="w-full px-6 py-3 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                        >
                             Register
-                        </button>
+                        </Link>
                     </div>
                 </div>
             )}
