@@ -2,15 +2,32 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
+import { authClient } from "@/lib/auth-client"
+import Image from "next/image"
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-    // ইউজার লগইন স্টেট টেস্ট করার জন্য (True হলে অ্যাভাটার দেখাবে, False হলে বাটন)
-    // const [isLoggedIn, setIsLoggedIn] = useState(true)
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const { data: session, refetch } = authClient.useSession()
+
+    // console.log(session?.user)
+    const user = session?.user
 
     const pathname = usePathname()
+    if (pathname.includes("/dashboard")) {
+        return null
+    }
+
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    refetch()
+                    redirect("/login")
+                }
+            }
+        })
+    }
 
     return (
         <header className="fixed top-0 w-full z-50 bg-[#13131b] backdrop-blur-md border-b border-[#464554]/30">
@@ -48,18 +65,31 @@ export default function Header() {
                 <div className="flex items-center gap-4">
                     {/* Desktop View */}
                     <div className="hidden md:flex items-center gap-4">
-                        {isLoggedIn ? (
+                        {user ? (
                             /* User Profile Avatar */
-                            <Link
-                                href="/profile"
-                                className="w-10 h-10 rounded-full border border-[#464554]/60 overflow-hidden hover:border-[#c0c1ff] transition-all focus:outline-none"
-                            >
-                                <img
-                                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
-                                    alt="User Avatar"
-                                    className="w-full h-full object-cover bg-[#1b1b23]"
-                                />
-                            </Link>
+                            <div className="flex gap-2">
+                                <Link
+                                    href="/profile"
+                                    className="w-16 h-10 rounded-full border border-[#464554]/60 overflow-hidden hover:border-[#c0c1ff] transition-all focus:outline-none"
+                                >
+                                    <Image
+                                        className="w-full h-full object-cover"
+                                        height={40}
+                                        width={40}
+                                        alt="Alexander Hunt Profile"
+                                        src={
+                                            user?.image ||
+                                            `https://ui-avatars.com/api/?name=${user?.name}&background=19120d&color=ffb77e`
+                                        }
+                                    />
+                                </Link>
+                                <button
+                                    onClick={handleSignOut}
+                                    className="w-full cursor-pointer px-6 py-2 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
                         ) : (
                             <>
                                 <Link
@@ -97,12 +127,17 @@ export default function Header() {
                         ) : (
                             /* মোবাইলে লগইন থাকলে হ্যামবার্গারের পাশাপাশি ছোট করে অ্যাভাটারও দেখা যাবে */
                             <div className="flex items-center gap-3">
-                                {isLoggedIn && (
+                                {user && (
                                     <div className="w-8 h-8 rounded-full border border-[#464554]/60 overflow-hidden">
-                                        <img
-                                            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
-                                            alt="User Avatar"
-                                            className="w-full h-full object-cover bg-[#1b1b23]"
+                                        <Image
+                                            className="w-full h-full object-cover"
+                                            height={40}
+                                            width={40}
+                                            alt="Alexander Hunt Profile"
+                                            src={
+                                                user?.image ||
+                                                `https://ui-avatars.com/api/?name=${user?.name}&background=19120d&color=ffb77e`
+                                            }
                                         />
                                     </div>
                                 )}
@@ -149,20 +184,34 @@ export default function Header() {
                     </Link>
 
                     <div className="flex flex-col gap-3 mt-2 border-t border-[#464554]/30 pt-4">
-                        {isLoggedIn ? (
-                            <Link
-                                href="/profile"
-                                className="w-full px-6 py-3 rounded-xl bg-[#1b1b23] border border-[#464554]/30 text-[#c0c1ff] font-bold font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em] flex items-center gap-3"
-                            >
-                                <div className="w-6 h-6 rounded-full overflow-hidden border border-[#464554]/60">
-                                    <img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
-                                        alt="Avatar"
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                                My Profile
-                            </Link>
+                        {user ? (
+                            <div className=" flex gap-2">
+                                <Link
+                                    href="/profile"
+                                    className="w-full px-6 py-3 rounded-xl bg-[#1b1b23] border border-[#464554]/30 text-[#c0c1ff] font-bold font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em] flex items-center gap-3"
+                                >
+                                    <div className="w-6 h-6 rounded-full overflow-hidden border border-[#464554]/60">
+                                        <Image
+                                            className="w-full h-full object-cover"
+                                            height={40}
+                                            width={40}
+                                            alt="Alexander Hunt Profile"
+                                            src={
+                                                user?.image ||
+                                                `https://ui-avatars.com/api/?name=${user?.name}&background=19120d&color=ffb77e`
+                                            }
+                                        />
+                                    </div>
+                                    My Profile
+                                </Link>
+
+                                <button
+                                    onClick={handleSignOut}
+                                    className="w-full px-6 py-3 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
                         ) : (
                             <>
                                 <Link

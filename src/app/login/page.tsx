@@ -1,20 +1,45 @@
 "use client"
 import { useState, FormEvent, ChangeEvent } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { authClient } from "@/lib/auth-client"
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({ email: "", password: "" })
     const [rememberMe, setRememberMe] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+    const router = useRouter()
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
-        console.log("Login submitted:", formData, { rememberMe })
+
+        const formData = new FormData(e.currentTarget)
+
+        const email = formData.get("email")
+        const password = formData.get("password")
+
+        if (typeof email !== "string" || typeof password !== "string") {
+            alert("Invalid form data")
+            return
+        }
+
+        const { data, error } = await authClient.signIn.email({
+            email,
+            password
+        })
+
+        if (error) {
+            alert(error.message)
+            return
+        }
+
+        alert("Logged in successfully!")
+        router.push("/")
     }
 
     const iconStyle = {

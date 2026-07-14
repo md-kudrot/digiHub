@@ -1,6 +1,8 @@
 "use client"
 import { useState, FormEvent, ChangeEvent } from "react"
 import Link from "next/link"
+import { redirect } from "next/navigation"
+import { authClient } from "@/lib/auth-client"
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -17,13 +19,40 @@ export default function RegisterPage() {
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleSubmit = (e: FormEvent) => {
+    type RegisterFormData = {
+        username: string
+        email: string
+        password: string
+        confirmPassword: string
+    }
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
-        if (formData.password !== formData.confirmPassword) {
+
+        const form = new FormData(e.currentTarget)
+
+        const user = Object.fromEntries(form.entries()) as RegisterFormData
+
+        if (user.password !== user.confirmPassword) {
             alert("Passwords don't match!")
             return
         }
-        console.log("Registration submitted:", formData)
+
+        console.log("Registration submitted:", user)
+
+        const { data, error } = await authClient.signUp.email({
+            name: user.username, // username -> name
+            email: user.email,
+            password: user.password
+        })
+
+        if (data) {
+            redirect("/")
+        }
+
+        if (error) {
+            alert("Signup error: " + error.message)
+        }
     }
 
     const iconStyle = {
