@@ -1,6 +1,5 @@
 "use client"
 import { useEffect, useState } from "react"
-import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { CircleCheckFill, HeartFill, ShoppingCart } from "@gravity-ui/icons"
 import Link from "next/link"
@@ -9,15 +8,15 @@ interface Product {
     _id: string
     title: string
     slug: string
-    category: string
+    category?: string
     price: string
-    originalPrice: string
-    features: string[]
+    originalPrice?: string
+    features?: string[]
     img: string
-    badge: string
-    badgeBg: string
-    badgeText: string
-    stock: string
+    badge?: string
+    badgeBg?: string
+    badgeText?: string
+    stock?: string
 }
 
 interface ProductsResponse {
@@ -61,7 +60,7 @@ export default function ProductsGrid() {
                 }
 
                 const data: ProductsResponse = await res.json()
-                setProducts(data.items)
+                setProducts(data.items ?? [])
             } catch (err) {
                 console.error("Error fetching products:", err)
                 setError("Failed to load products. Please try again later.")
@@ -120,7 +119,7 @@ export default function ProductsGrid() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 {products.map((product) => (
                     <Link
-                        href={`products/${product.slug}`}
+                        href={`/products/${product.slug}`}
                         key={product._id}
                         className="group bg-[#1f1f27] rounded-2xl shadow-[0_4px_12px_rgba(15,23,42,0.05)] border border-[#464554]/20 overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(15,23,42,0.1)] flex flex-col h-full"
                     >
@@ -129,13 +128,11 @@ export default function ProductsGrid() {
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 alt={product.title}
                                 src={product.img}
-                                fill
-                                sizes="(max-width: 768px) 100vw, 33vw"
                             />
                             <div
-                                className={`absolute top-3 left-3 ${product.badgeBg} ${product.badgeText} text-[12px] font-bold px-3 py-1 rounded-full uppercase tracking-wider`}
+                                className={`absolute top-3 left-3 ${product.badgeBg ?? "bg-[#292932]"} ${product.badgeText ?? "text-[#e4e1ed]"} text-[12px] font-bold px-3 py-1 rounded-full uppercase tracking-wider`}
                             >
-                                {product.badge}
+                                {product.badge ?? "New"}
                             </div>
                             <div className="absolute top-3 right-3 bg-[#13131b]/80 backdrop-blur-md p-1.5 rounded-full shadow-sm hover:bg-[#13131b] cursor-pointer transition-colors">
                                 <HeartFill className="w-5 h-5 text-[#c0c1ff]" />
@@ -144,18 +141,18 @@ export default function ProductsGrid() {
                         <div className="p-4 flex flex-col grow">
                             <div className="flex items-center gap-2 mb-1">
                                 <span className="text-[12px] font-bold text-[#ffb783] uppercase tracking-tighter">
-                                    {product.category}
+                                    {product.category ?? "General"}
                                 </span>
                                 <span className="w-1 h-1 rounded-full bg-[#464554]" />
                                 <span className="text-[12px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full font-semibold">
-                                    {product.stock}
+                                    {product.stock ?? "Available"}
                                 </span>
                             </div>
                             <h3 className="font-['Geist'] text-[24px] font-semibold leading-[1.3] text-[#e4e1ed] mb-2">
                                 {product.title}
                             </h3>
                             <ul className="text-[12px] text-[#c7c4d7] mb-4 space-y-1">
-                                {product.features.map((feat, fIdx) => (
+                                {(product.features ?? []).map((feat, fIdx) => (
                                     <li key={fIdx} className="flex items-center gap-1">
                                         <CircleCheckFill className="w-3.5 h-3.5 text-[#c0c1ff] shrink-0" /> {feat}
                                     </li>
@@ -163,9 +160,11 @@ export default function ProductsGrid() {
                             </ul>
                             <div className="mt-auto flex items-center justify-between border-t border-[#464554]/30 pt-4">
                                 <div>
-                                    <span className="text-[12px] text-[#c7c4d7] line-through block">
-                                        {product.originalPrice}
-                                    </span>
+                                    {product.originalPrice && (
+                                        <span className="text-[12px] text-[#c7c4d7] line-through block">
+                                            {product.originalPrice}
+                                        </span>
+                                    )}
                                     <span className="font-['Geist'] text-[24px] font-semibold leading-[1.3] text-[#c0c1ff]">
                                         {product.price}
                                     </span>

@@ -131,7 +131,7 @@ export default async function FeaturedProducts() {
                                 {product.title}
                             </h3>
                             <div className="space-y-2 mb-6">
-                                {product.features.map((feature, fIdx) => (
+                                {product.features?.map((feature, fIdx) => (
                                     <div key={fIdx} className="flex items-center gap-2 text-[13px] text-[#c7c4d7]">
                                         <CircleCheckFill className="w-4.5 h-4.5 text-green-600 shrink-0" />
                                         {feature}
@@ -151,4 +151,3 @@ export default async function FeaturedProducts() {
         </section>
     )
 }
-
