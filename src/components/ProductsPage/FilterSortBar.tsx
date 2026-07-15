@@ -28,6 +28,7 @@ export default function FilterSortBar() {
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
+    const activeSearchTerm = searchParams.get("searchTerm") || searchParams.get("search") || ""
     const activeCategory = searchParams.get("category") || ""
     const activeMinPrice = searchParams.get("minPrice") || ""
     const activeMaxPrice = searchParams.get("maxPrice") || ""
@@ -45,6 +46,7 @@ export default function FilterSortBar() {
     const categoryRef = useRef<HTMLDivElement>(null)
     const priceRef = useRef<HTMLDivElement>(null)
     const availabilityRef = useRef<HTMLDivElement>(null)
+    const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     // Dropdown-er baire click korle bondho hobe
     useEffect(() => {
@@ -79,6 +81,29 @@ export default function FilterSortBar() {
         }
         // use replace so the new filter state is applied immediately without stacking history entries
         router.replace(url)
+    }
+
+    useEffect(() => {
+        return () => {
+            if (searchDebounceRef.current) {
+                clearTimeout(searchDebounceRef.current)
+            }
+        }
+    }, [])
+
+    const handleSearchInputChange = (value: string) => {
+        if (searchDebounceRef.current) {
+            clearTimeout(searchDebounceRef.current)
+        }
+
+        searchDebounceRef.current = setTimeout(() => {
+            const trimmed = value.trim()
+            if (trimmed === activeSearchTerm) return
+            updateParams({
+                searchTerm: trimmed || null,
+                search: trimmed || null
+            })
+        }, 400)
     }
 
     const handleCategorySelect = (category: string) => {
@@ -122,6 +147,18 @@ export default function FilterSortBar() {
     return (
         <div className="bg-[#1f1f27] p-[16px] rounded-2xl shadow-sm border border-[#464554] mb-[24px] sticky top-24 z-40">
             <div className="">
+                {/* Search */}
+                <div className="mb-3">
+                    <input
+                        key={activeSearchTerm}
+                        type="text"
+                        defaultValue={activeSearchTerm}
+                        onChange={(e) => handleSearchInputChange(e.target.value)}
+                        placeholder="Search products by name or category..."
+                        className="w-full bg-[#1b1b23] border border-[#464554] rounded-xl px-4 py-2.5 text-[14px] font-['Geist'] text-[#e4e1ed] placeholder:text-[#8c8a9e] outline-none focus:border-[#c0c1ff]"
+                    />
+                </div>
+
                 {/* Filters */}
                 <div className="flex flex-wrap items-center gap-3">
                     {/* Category Dropdown */}

@@ -9,13 +9,18 @@ export default function Pagination() {
     const searchParams = useSearchParams()
 
     const currentPage = Number(searchParams.get("page")) || 1
+    const paramsString = searchParams.toString()
     const [totalPages, setTotalPages] = useState(1)
 
     // totalPages sudhu janar jonno halka fetch — real product list ProductsGrid theke ashe
     useEffect(() => {
         const fetchTotalPages = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?page=1&limit=8`)
+                const params = new URLSearchParams(paramsString)
+                params.set("page", "1")
+                params.set("limit", "8")
+
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?${params.toString()}`)
                 if (!res.ok) return
                 const data = await res.json()
                 setTotalPages(data.totalPages || 1)
@@ -25,7 +30,7 @@ export default function Pagination() {
         }
 
         fetchTotalPages()
-    }, [])
+    }, [paramsString])
 
     const goToPage = (page: number) => {
         if (page < 1 || page > totalPages || page === currentPage) return

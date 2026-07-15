@@ -44,9 +44,10 @@ export default function ProductsGrid() {
                 setIsLoading(true)
                 setError(null)
 
-                const params = new URLSearchParams(searchParams.toString())
+                const params = new URLSearchParams(paramsString)
                 params.set("page", String(currentPage))
                 params.set("limit", String(PAGE_SIZE))
+                const activeSearchTerm = (params.get("searchTerm") || params.get("search") || "").trim().toLowerCase()
 
                 const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?${params.toString()}`, {
                     method: "GET",
@@ -60,7 +61,17 @@ export default function ProductsGrid() {
                 }
 
                 const data: ProductsResponse = await res.json()
-                setProducts(data.items ?? [])
+                const items = data.items ?? []
+                const filteredItems =
+                    activeSearchTerm.length === 0
+                        ? items
+                        : items.filter((product) => {
+                              const title = product.title?.toLowerCase() || ""
+                              const category = product.category?.toLowerCase() || ""
+                              return title.includes(activeSearchTerm) || category.includes(activeSearchTerm)
+                          })
+
+                setProducts(filteredItems)
             } catch (err) {
                 console.error("Error fetching products:", err)
                 setError("Failed to load products. Please try again later.")
