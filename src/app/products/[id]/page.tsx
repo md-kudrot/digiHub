@@ -103,7 +103,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                         {/* Left Column: Product Graphic Container */}
                         <div className="lg:col-span-5 relative group w-full max-w-105 mx-auto lg:mx-0">
                             <div className="aspect-4/5 rounded-3xl overflow-hidden bg-[#22222a] shadow-lg transition-all duration-200 ease-out flex items-center justify-center border border-[#464554]/20 p-6">
-                                <Image
+                                <img
                                     className="w-full h-auto object-contain rounded-xl"
                                     alt={product.title}
                                     src={product.img}

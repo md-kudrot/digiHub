@@ -1,7 +1,9 @@
 "use client"
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { CircleCheckFill, HeartFill, ShoppingCart } from "@gravity-ui/icons"
+import Link from "next/link"
 
 interface Product {
     _id: string
@@ -30,6 +32,7 @@ const PAGE_SIZE = 8
 
 export default function ProductsGrid() {
     const searchParams = useSearchParams()
+    const paramsString = searchParams.toString()
     const currentPage = Number(searchParams.get("page")) || 1
 
     const [products, setProducts] = useState<Product[]>([])
@@ -42,15 +45,16 @@ export default function ProductsGrid() {
                 setIsLoading(true)
                 setError(null)
 
-                const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=${currentPage}&limit=${PAGE_SIZE}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
+                const params = new URLSearchParams(searchParams.toString())
+                params.set("page", String(currentPage))
+                params.set("limit", String(PAGE_SIZE))
+
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?${params.toString()}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
                     }
-                )
+                })
 
                 if (!res.ok) {
                     throw new Error("Failed to fetch products")
@@ -67,7 +71,7 @@ export default function ProductsGrid() {
         }
 
         fetchProducts()
-    }, [currentPage])
+    }, [paramsString, currentPage])
 
     if (error) {
         return (
@@ -79,21 +83,21 @@ export default function ProductsGrid() {
 
     if (isLoading) {
         return (
-            <div className="mb-[24px]">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[24px]">
+            <div className="mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                         <div key={i} className="bg-[#1f1f27] rounded-2xl border border-[#464554]/20 overflow-hidden">
-                            <div className="h-48 w-full bg-gradient-to-r from-[#292932] via-[#34343d] to-[#292932] bg-[length:200%_100%] animate-pulse"></div>
-                            <div className="p-[16px] space-y-3">
-                                <div className="h-4 w-24 bg-[#292932] rounded-full animate-pulse"></div>
-                                <div className="h-6 w-full bg-[#292932] rounded-lg animate-pulse"></div>
+                            <div className="h-48 w-full bg-linear-to-r from-[#292932] via-[#34343d] to-[#292932] bg-size-[200%_100%] animate-pulse" />
+                            <div className="p-4 space-y-3">
+                                <div className="h-4 w-24 bg-[#292932] rounded-full animate-pulse" />
+                                <div className="h-6 w-full bg-[#292932] rounded-lg animate-pulse" />
                                 <div className="space-y-1.5">
-                                    <div className="h-3 w-3/4 bg-[#292932] rounded animate-pulse"></div>
-                                    <div className="h-3 w-1/2 bg-[#292932] rounded animate-pulse"></div>
+                                    <div className="h-3 w-3/4 bg-[#292932] rounded animate-pulse" />
+                                    <div className="h-3 w-1/2 bg-[#292932] rounded animate-pulse" />
                                 </div>
                                 <div className="pt-4 flex justify-between items-center border-t border-[#464554]/30">
-                                    <div className="h-8 w-20 bg-[#292932] rounded-lg animate-pulse"></div>
-                                    <div className="h-10 w-10 bg-[#292932] rounded-xl animate-pulse"></div>
+                                    <div className="h-8 w-20 bg-[#292932] rounded-lg animate-pulse" />
+                                    <div className="h-10 w-10 bg-[#292932] rounded-xl animate-pulse" />
                                 </div>
                             </div>
                         </div>
@@ -112,10 +116,11 @@ export default function ProductsGrid() {
     }
 
     return (
-        <div className="mb-[24px]">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[24px] mb-[24px]">
+        <div className="mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 {products.map((product) => (
-                    <div
+                    <Link
+                        href={`products/${product.slug}`}
                         key={product._id}
                         className="group bg-[#1f1f27] rounded-2xl shadow-[0_4px_12px_rgba(15,23,42,0.05)] border border-[#464554]/20 overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(15,23,42,0.1)] flex flex-col h-full"
                     >
@@ -124,6 +129,8 @@ export default function ProductsGrid() {
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 alt={product.title}
                                 src={product.img}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 33vw"
                             />
                             <div
                                 className={`absolute top-3 left-3 ${product.badgeBg} ${product.badgeText} text-[12px] font-bold px-3 py-1 rounded-full uppercase tracking-wider`}
@@ -134,12 +141,12 @@ export default function ProductsGrid() {
                                 <HeartFill className="w-5 h-5 text-[#c0c1ff]" />
                             </div>
                         </div>
-                        <div className="p-[16px] flex flex-col flex-grow">
+                        <div className="p-4 flex flex-col grow">
                             <div className="flex items-center gap-2 mb-1">
                                 <span className="text-[12px] font-bold text-[#ffb783] uppercase tracking-tighter">
                                     {product.category}
                                 </span>
-                                <span className="w-1 h-1 rounded-full bg-[#464554]"></span>
+                                <span className="w-1 h-1 rounded-full bg-[#464554]" />
                                 <span className="text-[12px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full font-semibold">
                                     {product.stock}
                                 </span>
@@ -150,7 +157,7 @@ export default function ProductsGrid() {
                             <ul className="text-[12px] text-[#c7c4d7] mb-4 space-y-1">
                                 {product.features.map((feat, fIdx) => (
                                     <li key={fIdx} className="flex items-center gap-1">
-                                        <CircleCheckFill className="w-[14px] h-[14px] text-[#c0c1ff] shrink-0" /> {feat}
+                                        <CircleCheckFill className="w-3.5 h-3.5 text-[#c0c1ff] shrink-0" /> {feat}
                                     </li>
                                 ))}
                             </ul>
@@ -168,10 +175,9 @@ export default function ProductsGrid() {
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>
     )
 }
-
