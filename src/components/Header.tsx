@@ -64,13 +64,13 @@ export default function Header() {
                 {/* Right Side Actions */}
                 <div className="flex items-center gap-4">
                     {/* Desktop View */}
-                    <div className="hidden md:flex items-center gap-4">
+                    <div className="hidden md:flex items-center  gap-4">
                         {user ? (
                             /* User Profile Avatar */
                             <div className="flex gap-2">
                                 <Link
                                     href="/dashboard/profile"
-                                    className="w-16 h-10 rounded-full border border-[#464554]/60 overflow-hidden hover:border-[#c0c1ff] transition-all focus:outline-none"
+                                    className="w-25 h-10 rounded-full border border-[#464554]/60 overflow-hidden hover:border-[#c0c1ff] transition-all focus:outline-none"
                                 >
                                     <Image
                                         className="w-full h-full object-cover"
@@ -83,9 +83,15 @@ export default function Header() {
                                         }
                                     />
                                 </Link>
+                                <Link
+                                    href="/dashboard"
+                                    className="w-full cursor-pointer  text-center py-2 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                                >
+                                    Dashboard
+                                </Link>
                                 <button
                                     onClick={handleSignOut}
-                                    className="w-full cursor-pointer px-6 py-2 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
+                                    className="w-full cursor-pointer  py-2 rounded-xl bg-gradient-to-br from-[#4648d4] to-[#2170e4] text-white font-bold hover:opacity-90 shadow-sm transition-all font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]"
                                 >
                                     Sign Out
                                 </button>

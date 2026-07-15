@@ -1,7 +1,33 @@
-import React from "react"
+"use client"
+import { authClient } from "@/lib/auth-client"
 
-const page = () => {
-    return <div>khela hbe</div>
+function getGreeting() {
+    const h = new Date().getHours()
+    if (h < 12) return "Good morning"
+    if (h < 17) return "Good afternoon"
+    return "Good evening"
 }
 
-export default page
+export default function AdminDashboard() {
+    const { data: session, isPending } = authClient.useSession()
+    const user = session?.user
+    const role = user?.role
+    if (isPending) return null
+
+    return (
+        <div className="flex flex-col gap-1 p-4">
+            <p className="text-sm text-[#8a7060] tracking-widest uppercase">{getGreeting()}</p>
+            <h1 className="text-4xl font-medium text-white">
+                Welcome back, <span className="text-[#c0c1ff]">{user?.name?.split(" ")[0] ?? role}</span>
+            </h1>
+            <p className="text-sm text-[#6b5a4e] mt-1">
+                {new Date().toLocaleDateString("en-GB", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                })}
+            </p>
+        </div>
+    )
+}

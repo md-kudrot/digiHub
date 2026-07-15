@@ -1,5 +1,7 @@
 "use client"
+import { authClient } from "@/lib/auth-client"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 
 interface MenuItem {
     id: string
@@ -16,6 +18,20 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ menuItems, pathname, setIsMobileMenuOpen, iconStyle }: MobileMenuProps) {
+    const { data: session, refetch } = authClient.useSession()
+
+    // console.log(session?.user)
+    const user = session?.user
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    refetch()
+                    redirect("/login")
+                }
+            }
+        })
+    }
     return (
         <div className="md:hidden fixed top-20 left-0 w-full bg-[#13131b] border-b border-[#464554]/30 px-6 py-4 flex flex-col gap-3 z-40">
             {menuItems.map((item) => {
@@ -36,7 +52,10 @@ export default function MobileMenu({ menuItems, pathname, setIsMobileMenuOpen, i
                     </Link>
                 )
             })}
-            <button className="flex items-center gap-3 px-4 py-3 text-rose-400 font-bold font-['Geist'] text-[14px] tracking-[0.05em] border-t border-[#464554]/20 pt-4 mt-1">
+            <button
+                className="flex items-center cursor-pointer gap-3 px-4 py-3 text-rose-400 font-bold font-['Geist'] text-[14px] tracking-[0.05em] border-t border-[#464554]/20 pt-4 mt-1"
+                onClick={handleSignOut}
+            >
                 <span className="material-symbols-outlined text-[18px]" style={iconStyle}>
                     logout
                 </span>
