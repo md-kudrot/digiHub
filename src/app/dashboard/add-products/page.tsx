@@ -3,6 +3,7 @@
 import { useState, FormEvent, ChangeEvent, KeyboardEvent } from "react"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
+import { CirclePlusFill, Link as LinkIcon } from "@gravity-ui/icons"
 
 interface ProductFormData {
     title: string
@@ -173,18 +174,8 @@ export default function AddItemPage() {
         }
     }
 
-    const iconStyle = {
-        fontFamily: '"Material Symbols Outlined"',
-        fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24"
-    }
-
     return (
         <div className="bg-[#13131b] font-['Inter'] text-[#e4e1ed] min-h-screen w-full flex items-center justify-center p-2 relative overflow-hidden">
-            <link
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-                rel="stylesheet"
-            />
-
             {/* Background Gradients */}
             <div className="absolute top-[-10%] right-[-10%] w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-[#4648d4]/10 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-[#2170e4]/10 rounded-full blur-[100px] pointer-events-none" />
@@ -392,12 +383,7 @@ export default function AddItemPage() {
                             Asset Image URL <span className="text-[#8c8a9e] text-[11px] normal-case">(Optional)</span>
                         </label>
                         <div className="relative flex items-center">
-                            <span
-                                className="material-symbols-outlined absolute left-3.5 text-[#8c8a9e] text-[18px]"
-                                style={iconStyle}
-                            >
-                                link
-                            </span>
+                            <LinkIcon className="absolute left-3.5 text-[#8c8a9e] w-[18px] h-[18px]" />
                             <input
                                 type="url"
                                 name="img"
@@ -415,9 +401,7 @@ export default function AddItemPage() {
                         disabled={submitting}
                         className="w-full py-3 mt-2 bg-gradient-to-r from-[#9aa3ff] to-[#a3baff] text-slate-900 font-bold rounded-xl text-[14px] md:text-[15px] transition-all hover:opacity-90 active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
                     >
-                        <span className="material-symbols-outlined text-[20px] font-bold" style={iconStyle}>
-                            add_circle
-                        </span>
+                        <CirclePlusFill className="w-5 h-5" />
                         {submitting ? "Submitting..." : "Submit & Add Item"}
                     </button>
                 </form>

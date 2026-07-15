@@ -3,6 +3,7 @@ import { useState, FormEvent, ChangeEvent } from "react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
+import { Envelope, Eye, EyeSlash, Lock, LogoGooglePlay, Person } from "@gravity-ui/icons"
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -55,18 +56,8 @@ export default function RegisterPage() {
         }
     }
 
-    const iconStyle = {
-        fontFamily: '"Material Symbols Outlined"',
-        fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24"
-    }
-
     return (
         <div className="bg-[#13131b] py-30 font-['Inter'] text-[#e4e1ed] w-full flex items-center justify-center p-4 relative overflow-x-hidden">
-            <link
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-                rel="stylesheet"
-            />
-
             {/* Decorative Blur Backgrounds */}
             <div className="absolute top-[-10%] right-[-10%] w-[300px]  bg-[#4648d4]/10 rounded-full blur-[100px] md:blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[300px]   bg-[#2170e4]/10 rounded-full blur-[100px] md:blur-[120px] pointer-events-none" />
@@ -90,12 +81,7 @@ export default function RegisterPage() {
                             Full Name
                         </label>
                         <div className="relative flex items-center">
-                            <span
-                                className="material-symbols-outlined absolute left-3.5 text-[#8c8a9e] text-[18px]"
-                                style={iconStyle}
-                            >
-                                person
-                            </span>
+                            <Person className="absolute left-3.5 text-[#8c8a9e] w-[18px] h-[18px]" />
                             <input
                                 type="text"
                                 name="username"
@@ -114,12 +100,7 @@ export default function RegisterPage() {
                             Email Address
                         </label>
                         <div className="relative flex items-center">
-                            <span
-                                className="material-symbols-outlined absolute left-3.5 text-[#8c8a9e] text-[18px]"
-                                style={iconStyle}
-                            >
-                                mail
-                            </span>
+                            <Envelope className="absolute left-3.5 text-[#8c8a9e] w-[18px] h-[18px]" />
                             <input
                                 type="email"
                                 name="email"
@@ -138,12 +119,7 @@ export default function RegisterPage() {
                             Password
                         </label>
                         <div className="relative flex items-center">
-                            <span
-                                className="material-symbols-outlined absolute left-3.5 text-[#8c8a9e] text-[18px]"
-                                style={iconStyle}
-                            >
-                                lock
-                            </span>
+                            <Lock className="absolute left-3.5 text-[#8c8a9e] w-[18px] h-[18px]" />
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
@@ -158,9 +134,11 @@ export default function RegisterPage() {
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3.5 text-[#8c8a9e] hover:text-white flex items-center justify-center focus:outline-none select-none"
                             >
-                                <span className="material-symbols-outlined text-[18px]" style={iconStyle}>
-                                    {showPassword ? "visibility_off" : "visibility"}
-                                </span>
+                                {showPassword ? (
+                                    <EyeSlash className="w-[18px] h-[18px]" />
+                                ) : (
+                                    <Eye className="w-[18px] h-[18px]" />
+                                )}
                             </button>
                         </div>
                     </div>
@@ -171,12 +149,7 @@ export default function RegisterPage() {
                             Confirm Password
                         </label>
                         <div className="relative flex items-center">
-                            <span
-                                className="material-symbols-outlined absolute left-3.5 text-[#8c8a9e] text-[18px]"
-                                style={iconStyle}
-                            >
-                                lock
-                            </span>
+                            <Lock className="absolute left-3.5 text-[#8c8a9e] w-[18px] h-[18px]" />
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
                                 name="confirmPassword"
@@ -191,9 +164,11 @@ export default function RegisterPage() {
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 className="absolute right-3.5 text-[#8c8a9e] hover:text-white flex items-center justify-center focus:outline-none select-none"
                             >
-                                <span className="material-symbols-outlined text-[18px]" style={iconStyle}>
-                                    {showConfirmPassword ? "visibility_off" : "visibility"}
-                                </span>
+                                {showConfirmPassword ? (
+                                    <EyeSlash className="w-[18px] h-[18px]" />
+                                ) : (
+                                    <Eye className="w-[18px] h-[18px]" />
+                                )}
                             </button>
                         </div>
                     </div>
@@ -234,24 +209,7 @@ export default function RegisterPage() {
                     onClick={() => console.log("Google login clicked")}
                     className="w-full flex items-center justify-center gap-2.5 py-2.5 bg-[#13131b] border border-[#464554]/40 hover:bg-[#1a1a24] text-white font-semibold rounded-xl text-[14px] md:text-[15px] transition-all active:scale-[0.99]"
                 >
-                    <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24">
-                        <path
-                            fill="#EA4335"
-                            d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.23 2.69 1.24 6.65l4.026 3.115Z"
-                        />
-                        <path
-                            fill="#FBBC05"
-                            d="M1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.24 5.35l4.026-3.115A7.052 7.052 0 0 1 4.91 12c0-1.575.405-3.05 1.114-4.35L1.24 6.65Z"
-                        />
-                        <path
-                            fill="#4285F4"
-                            d="M23.49 12.275c0-.818-.073-1.609-.21-2.373H12v4.5h6.445a5.51 5.51 0 0 1-2.39 3.614l3.736 2.895c2.182-2.01 3.436-4.968 3.436-8.636Z"
-                        />
-                        <path
-                            fill="#34A853"
-                            d="M16.055 18.016a7.036 7.036 0 0 1-4.055 1.266c-3.664 0-6.773-2.482-7.882-5.814L.092 16.582C2.082 20.545 6.123 23.236 10.855 23.236c3.109 0 5.945-1.01 7.936-2.764l-2.736-2.456Z"
-                        />
-                    </svg>
+                    <LogoGooglePlay className="w-4 h-4 md:w-5 md:h-5" />
                     Continue with Google
                 </button>
 

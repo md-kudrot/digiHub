@@ -1,22 +1,23 @@
 "use client"
 import { authClient } from "@/lib/auth-client"
+import { ArrowRightFromSquare } from "@gravity-ui/icons"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { ComponentType, SVGProps } from "react"
 
 interface MenuItem {
     id: string
     label: string
-    icon: string
+    icon: ComponentType<SVGProps<SVGSVGElement>>
     href: string
 }
 
 interface SidebarProps {
     menuItems: MenuItem[]
     pathname: string
-    iconStyle: object
 }
 
-export default function Sidebar({ menuItems, pathname, iconStyle }: SidebarProps) {
+export default function Sidebar({ menuItems, pathname }: SidebarProps) {
     const { refetch } = authClient.useSession()
     const handleSignOut = async () => {
         await authClient.signOut({
@@ -43,6 +44,7 @@ export default function Sidebar({ menuItems, pathname, iconStyle }: SidebarProps
             <nav className="flex-1 space-y-1.5">
                 {menuItems.map((item) => {
                     const isActive = pathname === item.href
+                    const Icon = item.icon
                     return (
                         <Link
                             key={item.id}
@@ -53,9 +55,7 @@ export default function Sidebar({ menuItems, pathname, iconStyle }: SidebarProps
                                     : "text-[#8c8a9e] hover:bg-[#13131b] hover:text-white"
                             }`}
                         >
-                            <span className="material-symbols-outlined text-[20px]" style={iconStyle}>
-                                {item.icon}
-                            </span>
+                            <Icon className="w-5 h-5" />
                             {item.label}
                         </Link>
                     )
@@ -68,9 +68,7 @@ export default function Sidebar({ menuItems, pathname, iconStyle }: SidebarProps
                     onClick={handleSignOut}
                     className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-rose-400 font-medium text-[14px] font-['Geist'] hover:bg-rose-500/10 transition-all"
                 >
-                    <span className="material-symbols-outlined text-[20px]" style={iconStyle}>
-                        logout
-                    </span>
+                    <ArrowRightFromSquare className="w-5 h-5" />
                     Logout
                 </button>
             </div>

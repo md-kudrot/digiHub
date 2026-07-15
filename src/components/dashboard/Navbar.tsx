@@ -1,14 +1,14 @@
 "use client"
 import { authClient } from "@/lib/auth-client"
+import { Bars, ShoppingCart, Xmark } from "@gravity-ui/icons"
 import Link from "next/link"
 
 interface NavbarProps {
     isMobileMenuOpen: boolean
     setIsMobileMenuOpen: (open: boolean) => void
-    iconStyle: object
 }
 
-export default function Navbar({ isMobileMenuOpen, setIsMobileMenuOpen, iconStyle }: NavbarProps) {
+export default function Navbar({ isMobileMenuOpen, setIsMobileMenuOpen }: NavbarProps) {
     const { data: session } = authClient.useSession()
 
     const user = session?.user
@@ -28,9 +28,7 @@ export default function Navbar({ isMobileMenuOpen, setIsMobileMenuOpen, iconStyl
                     href="/products"
                     className="hidden sm:flex items-center gap-2 text-[13px] font-semibold text-[#c0c1ff] hover:underline"
                 >
-                    <span className="material-symbols-outlined text-[16px]" style={iconStyle}>
-                        shopping_cart
-                    </span>
+                    <ShoppingCart className="w-4 h-4" />
                     Back to Store
                 </Link>
 
@@ -54,33 +52,7 @@ export default function Navbar({ isMobileMenuOpen, setIsMobileMenuOpen, iconStyl
                     className="md:hidden text-[#c0c1ff] p-2 cursor-pointer"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
-                    {isMobileMenuOpen ? (
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    ) : (
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                            />
-                        </svg>
-                    )}
+                    {isMobileMenuOpen ? <Xmark className="w-6 h-6" /> : <Bars className="w-6 h-6" />}
                 </button>
             </div>
         </header>

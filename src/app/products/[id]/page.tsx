@@ -1,8 +1,8 @@
 "use client"
 import React, { useState, useEffect, ChangeEvent, use } from "react"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
+import { CircleCheckFill, Minus, Plus, ShieldCheck, StarFill, ThunderboltFill } from "@gravity-ui/icons"
 
 interface Product {
     _id: string
@@ -64,7 +64,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
         }
 
         fetchProduct()
-    }, [productId])
+    }, [productId, router])
 
     const basePrice = product?.price ?? 0
     const baseOriginalPrice = product?.originalPrice ?? 0
@@ -78,9 +78,6 @@ export default function ProductDetailsPage({ params }: PageProps) {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     })
-
-    const iconStyle: React.CSSProperties = { fontVariationSettings: '"FILL" 0' }
-    const iconStyleFilled: React.CSSProperties = { fontVariationSettings: '"FILL" 1' }
 
     const handleIncrement = () => setQuantity((q) => (typeof q === "number" ? q + 1 : 1))
     const handleDecrement = () => setQuantity((q) => (typeof q === "number" ? Math.max(1, q - 1) : 1))
@@ -122,7 +119,6 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                     src={product.img}
                                     width={640}
                                     height={800}
-                                    priority
                                 />
                             </div>
 
@@ -130,9 +126,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                             <div className="absolute -bottom-4 -right-4 z-10">
                                 <div className="bg-[#292932]/95 backdrop-blur-md border border-[#464554]/30 px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3">
                                     <div className="bg-emerald-500/10 text-emerald-400 p-1.5 rounded-full flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-[20px]" style={iconStyleFilled}>
-                                            verified
-                                        </span>
+                                        <CircleCheckFill className="w-5 h-5" />
                                     </div>
                                     <div>
                                         <p className="text-[11px] font-semibold text-emerald-400/80 tracking-wide font-['Geist'] uppercase">
@@ -163,12 +157,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                     ID: {product._id}
                                 </span>
                                 <div className="flex items-center gap-1 text-[13px]">
-                                    <span
-                                        className="material-symbols-outlined text-[#ffb783] text-[18px]"
-                                        style={iconStyleFilled}
-                                    >
-                                        star
-                                    </span>
+                                    <StarFill className="text-[#ffb783] w-[18px] h-[18px]" />
                                     <span className="font-bold text-white">4.9</span>
                                     <span className="text-[#8c8a9e]">(128 Reviews)</span>
                                 </div>
@@ -190,18 +179,19 @@ export default function ProductDetailsPage({ params }: PageProps) {
                             {/* Feature Badges Grid */}
                             <div className="grid grid-cols-3 gap-3">
                                 {product.features.slice(0, 3).map((feature, i) => {
-                                    const icons = ["bolt", "security", "check_circle"]
+                                    const icons = [
+                                        <ThunderboltFill key="bolt" className="text-indigo-600 text-[20px] mt-0.5" />,
+                                        <ShieldCheck key="security" className="text-indigo-600 text-[20px] mt-0.5" />,
+                                        <CircleCheckFill key="check" className="text-indigo-600 text-[20px] mt-0.5" />
+                                    ]
                                     return (
                                         <div
                                             key={i}
                                             className="flex flex-col md:flex-row items-center md:items-start gap-2 p-3 bg-white text-black rounded-xl"
                                         >
-                                            <span
-                                                className="material-symbols-outlined text-indigo-600 text-[20px] mt-0.5"
-                                                style={iconStyle}
-                                            >
-                                                {icons[i] ?? "check_circle"}
-                                            </span>
+                                            {icons[i] ?? (
+                                                <CircleCheckFill className="text-indigo-600 text-[20px] mt-0.5" />
+                                            )}
                                             <div className="flex flex-col text-center md:text-left">
                                                 <span className="text-[12px] font-medium text-gray-500">Feature</span>
                                                 <span className="font-bold text-[12px] -mt-0.5">{feature}</span>
@@ -220,9 +210,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                             onClick={handleDecrement}
                                             className="px-3 py-2 hover:bg-[#292932] transition-colors text-[#e4e1ed]"
                                         >
-                                            <span className="material-symbols-outlined text-[14px]" style={iconStyle}>
-                                                remove
-                                            </span>
+                                            <Minus className="w-[14px] h-[14px]" />
                                         </button>
                                         <input
                                             type="number"
@@ -236,9 +224,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                             onClick={handleIncrement}
                                             className="px-3 py-2 hover:bg-[#292932] transition-colors text-[#e4e1ed]"
                                         >
-                                            <span className="material-symbols-outlined text-[14px]" style={iconStyle}>
-                                                add
-                                            </span>
+                                            <Plus className="w-[14px] h-[14px]" />
                                         </button>
                                     </div>
                                 </div>
@@ -311,9 +297,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                             className="flex items-start gap-4 p-4 border border-[#464554]/20 bg-[#1b1b23] rounded-xl"
                                         >
                                             <div className="bg-[#8083ff]/10 p-2 rounded-lg shrink-0 flex items-center justify-center text-[#c0c1ff]">
-                                                <span className="material-symbols-outlined" style={iconStyle}>
-                                                    check_circle
-                                                </span>
+                                                <CircleCheckFill className="w-5 h-5" />
                                             </div>
                                             <div>
                                                 <h4 className="font-bold text-white text-[15px]">{feature}</h4>
@@ -330,12 +314,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                     <ul className="space-y-3.5">
                                         {product.features.map((text, i) => (
                                             <li key={i} className="flex items-center gap-2.5 text-[14px]">
-                                                <span
-                                                    className="material-symbols-outlined text-emerald-400 text-[18px]"
-                                                    style={iconStyle}
-                                                >
-                                                    check_circle
-                                                </span>
+                                                <CircleCheckFill className="text-emerald-400 w-[18px] h-[18px]" />
                                                 <span className="text-[#e4e1ed]">{text}</span>
                                             </li>
                                         ))}
@@ -369,13 +348,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                     <p className="text-[44px] font-bold text-white leading-none">4.9</p>
                                     <div className="flex justify-center text-[#ffb783] mt-2">
                                         {[...Array(5)].map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className="material-symbols-outlined text-[18px]"
-                                                style={iconStyleFilled}
-                                            >
-                                                star
-                                            </span>
+                                            <StarFill key={i} className="w-[18px] h-[18px]" />
                                         ))}
                                     </div>
                                     <p className="text-[11px] mt-2 text-[#8c8a9e]">128 Verified Ratings</p>
@@ -428,13 +401,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                             </div>
                                             <div className="flex text-[#ffb783]">
                                                 {[...Array(5)].map((_, i) => (
-                                                    <span
-                                                        key={i}
-                                                        className="material-symbols-outlined text-[14px]"
-                                                        style={iconStyleFilled}
-                                                    >
-                                                        star
-                                                    </span>
+                                                    <StarFill key={i} className="w-[14px] h-[14px]" />
                                                 ))}
                                             </div>
                                         </div>

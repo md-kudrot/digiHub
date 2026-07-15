@@ -1,19 +1,10 @@
 "use client"
 import Link from "next/link"
+import { ArrowLeft, House } from "@gravity-ui/icons"
 
 export default function NotFound() {
-    const iconStyle = {
-        fontFamily: '"Material Symbols Outlined"',
-        fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24"
-    }
-
     return (
         <div className="bg-[#13131b] font-['Inter'] text-[#e4e1ed] min-h-screen w-full flex items-center justify-center p-6 relative overflow-hidden">
-            <link
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-                rel="stylesheet"
-            />
-
             {/* Decorative Blur Background Elements */}
             <div className="absolute top-[-20%] left-[-10%] w-[350px] md:w-[500px] h-[350px] md:h-[500px] bg-[#4648d4]/10 rounded-full blur-[100px] md:blur-[150px] pointer-events-none" />
             <div className="absolute bottom-[-20%] right-[-10%] w-[350px] md:w-[500px] h-[350px] md:h-[500px] bg-[#2170e4]/10 rounded-full blur-[100px] md:blur-[150px] pointer-events-none" />
@@ -40,9 +31,7 @@ export default function NotFound() {
                         href="/"
                         className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-[#9aa3ff] to-[#a3baff] text-slate-900 font-bold rounded-xl text-[14px] md:text-[15px] transition-all hover:opacity-90 active:scale-[0.99] flex items-center justify-center gap-2"
                     >
-                        <span className="material-symbols-outlined text-[18px]" style={iconStyle}>
-                            home
-                        </span>
+                        <House className="w-[18px] h-[18px]" />
                         Back to Home
                     </Link>
 
@@ -50,9 +39,7 @@ export default function NotFound() {
                         onClick={() => window.history.back()}
                         className="w-full sm:w-auto px-6 py-3 bg-[#1b1b23] border border-[#464554]/40 hover:bg-[#23232d] text-white font-semibold rounded-xl text-[14px] md:text-[15px] transition-all active:scale-[0.99] flex items-center justify-center gap-2"
                     >
-                        <span className="material-symbols-outlined text-[18px]" style={iconStyle}>
-                            arrow_back
-                        </span>
+                        <ArrowLeft className="w-[18px] h-[18px]" />
                         Go Back
                     </button>
                 </div>
