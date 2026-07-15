@@ -15,7 +15,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
 
     const menuItems = [
-        { id: "overview", label: "Overview", icon: "dashboard", href: "/dashboard" },
         { id: "add", label: "Add Product", icon: "add", href: "/dashboard/add-products" },
         { id: "manage", label: "Manage Products", icon: "inventory", href: "/dashboard/manage-products" },
         { id: "Profile", label: "Profile", icon: "person", href: "/dashboard/profile" }

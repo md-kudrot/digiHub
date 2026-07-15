@@ -251,7 +251,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                                 </div>
 
                                 <button className="w-full md:w-auto px-10 py-3.5 bg-linear-to-r from-[#9aa3ff] to-[#a3baff] text-slate-900 font-bold rounded-xl text-[15px] transition-all hover:opacity-90">
-                                    Login to Purchase
+                                    Purchase
                                 </button>
                             </div>
                         </div>

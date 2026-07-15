@@ -20,7 +20,7 @@ export default function Footer() {
                         DigiHub.
                     </Link>
                     <p className="text-[#c7c4d7] text-sm">
-                        Providing high-quality digital assets and premium subscriptions with trust and speed since 2021.
+                        Providing high-quality digital assets and premium subscriptions with trust and speed since 2026.
                     </p>
                     <div className="flex gap-4 mt-2">
                         <Link
@@ -120,7 +120,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="px-[32px] py-8 border-t border-[#464554]/30 text-center text-[12px] leading-[1.4] text-[#c7c4d7]">
-                © 2024 Digital Marketplace. All rights reserved. Professional Digital Asset Platform.
+                © 2026 Digital Marketplace. All rights reserved. Professional Digital Asset Platform.
             </div>
         </footer>
     )
