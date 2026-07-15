@@ -1,6 +1,8 @@
 "use client"
 import React, { useState, useEffect, ChangeEvent, use } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { authClient } from "@/lib/auth-client"
 
 interface Product {
     _id: string
@@ -22,7 +24,7 @@ interface PageProps {
 
 export default function ProductDetailsPage({ params }: PageProps) {
     const { id: productId } = use(params)
-
+    const router = useRouter()
     const [product, setProduct] = useState<Product | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -33,9 +35,20 @@ export default function ProductDetailsPage({ params }: PageProps) {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
+                const { data: tokenData } = await authClient.token()
+
+                if (!tokenData?.token) {
+                    setError("You must be logged in to view product details")
+                    router.push("/login")
+                    return
+                }
                 setLoading(true)
                 setError(null)
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`)
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
+                    headers: {
+                        Authorization: `Bearer ${tokenData.token}`
+                    }
+                })
 
                 if (!res.ok) {
                     throw new Error("Product not found")
@@ -449,4 +462,3 @@ export default function ProductDetailsPage({ params }: PageProps) {
         </div>
     )
 }
-

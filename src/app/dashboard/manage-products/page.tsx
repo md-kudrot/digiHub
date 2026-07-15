@@ -68,7 +68,7 @@ export default function SimpleProductsPage() {
             // const session = await authClient.getSession()
             // console.log("Session Data:", session.data?.session.token)
             const { data: tokenData } = await authClient.token()
-            console.log("Token Data:", tokenData?.token)
+            // console.log("Token Data:", tokenData?.token)
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`, {
                 method: "DELETE",
                 headers: {
