@@ -1,12 +1,60 @@
 "use client"
-import { useState, ChangeEvent } from "react"
+import React, { useState, useEffect, ChangeEvent, use } from "react"
+import Image from "next/image"
 
-export default function ProductDetailsPage() {
+interface Product {
+    _id: string
+    title: string
+    slug: string
+    category: string
+    price: number
+    originalPrice: number
+    features: string[]
+    img: string
+    badge: string
+    stock: string
+    description?: string
+}
+
+interface PageProps {
+    params: Promise<{ id: string }>
+}
+
+export default function ProductDetailsPage({ params }: PageProps) {
+    const { id: productId } = use(params)
+
+    const [product, setProduct] = useState<Product | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
     const [quantity, setQuantity] = useState<number | "">(1)
     const [activeTab, setActiveTab] = useState("overview")
 
-    const basePrice = 10
-    const baseOriginalPrice = 20
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                setLoading(true)
+                setError(null)
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`)
+
+                if (!res.ok) {
+                    throw new Error("Product not found")
+                }
+
+                const data: Product = await res.json()
+                setProduct(data)
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "Something went wrong")
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchProduct()
+    }, [productId])
+
+    const basePrice = product?.price ?? 0
+    const baseOriginalPrice = product?.originalPrice ?? 0
 
     const numericQuantity = typeof quantity === "number" ? quantity : 1
     const total = (basePrice * numericQuantity).toLocaleString("en-US", {
@@ -18,63 +66,50 @@ export default function ProductDetailsPage() {
         maximumFractionDigits: 2
     })
 
-    const handleIncrement = () => {
-        setQuantity((prev) => (typeof prev === "number" ? prev + 1 : 1))
-    }
+    const iconStyle: React.CSSProperties = { fontVariationSettings: '"FILL" 0' }
+    const iconStyleFilled: React.CSSProperties = { fontVariationSettings: '"FILL" 1' }
 
-    const handleDecrement = () => {
-        setQuantity((prev) => {
-            if (typeof prev !== "number") return 1
-            return prev > 1 ? prev - 1 : 1
-        })
-    }
+    const handleIncrement = () => setQuantity((q) => (typeof q === "number" ? q + 1 : 1))
+    const handleDecrement = () => setQuantity((q) => (typeof q === "number" ? Math.max(1, q - 1) : 1))
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value
-        if (val === "") {
-            setQuantity("")
-            return
-        }
-        const parsed = parseInt(val, 10)
-        if (!isNaN(parsed) && parsed >= 1) {
-            setQuantity(parsed)
-        }
-    }
-
-    const handleBlur = () => {
-        if (quantity === "") {
+        const val = Number(e.target.value)
+        if (Number.isNaN(val) || val < 1) {
             setQuantity(1)
+        } else {
+            setQuantity(Math.floor(val))
         }
     }
 
-    const iconStyle = {
-        fontFamily: '"Material Symbols Outlined"',
-        fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center bg-[#13131b] text-white">Loading...</div>
     }
-    const iconStyleFilled = {
-        fontFamily: '"Material Symbols Outlined"',
-        fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+
+    if (error || !product) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#13131b] text-white">
+                {error ?? "Product not found"}
+            </div>
+        )
     }
 
     return (
         <div className="bg-[#13131b] font-['Inter'] text-[#e4e1ed] min-h-screen w-full relative pb-24 md:pb-12">
-            <link
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-                rel="stylesheet"
-            />
-
             {/* Main Content Container */}
             <main className="max-w-[67%] mx-auto px-4 md:px-8 pt-24">
                 {/* Top Hero Section (Image + Product Info) */}
                 <section className="py-6 md:py-12">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                        {/* Left Column: Product Graphic Container (Vertical as shown in image) */}
-                        <div className="lg:col-span-5 relative group w-full max-w-[420px] mx-auto lg:mx-0">
-                            <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-[#22222a] shadow-lg transition-all duration-200 ease-out flex items-center justify-center border border-[#464554]/20 p-6">
-                                <img
+                        {/* Left Column: Product Graphic Container */}
+                        <div className="lg:col-span-5 relative group w-full max-w-105 mx-auto lg:mx-0">
+                            <div className="aspect-4/5 rounded-3xl overflow-hidden bg-[#22222a] shadow-lg transition-all duration-200 ease-out flex items-center justify-center border border-[#464554]/20 p-6">
+                                <Image
                                     className="w-full h-auto object-contain rounded-xl"
-                                    alt="Premium Gmail Account Bundle"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkfh6tZqTuTskJI8VP4LxzSZjdlUiksjOlX1WjBWMYu9Wdbrjisq7Xq1nPmdr5XYjKpuY_8lrOwjrcvgu_8r3fLDk1090OmFvrf__FpKFN23UuNEK6orAuD1nQbM4saqW_V9MBiXeJB2gVpUPpFOKBS4rS8zXUoY55irNnfoWFO-0Ji4_EHkhJnTOQhbP_Rr_m7ugFvgb0TCOlCe1BUnweYI2talyGULJZIcsfyKNixzBPv98QXP_Efg"
+                                    alt={product.title}
+                                    src={product.img}
+                                    width={640}
+                                    height={800}
+                                    priority
                                 />
                             </div>
 
@@ -88,10 +123,10 @@ export default function ProductDetailsPage() {
                                     </div>
                                     <div>
                                         <p className="text-[11px] font-semibold text-emerald-400/80 tracking-wide font-['Geist'] uppercase">
-                                            Verified Stock
+                                            {product.stock}
                                         </p>
                                         <p className="text-[18px] font-bold text-white font-['Geist'] leading-tight">
-                                            450+ Units
+                                            {product.badge}
                                         </p>
                                     </div>
                                 </div>
@@ -101,18 +136,18 @@ export default function ProductDetailsPage() {
                         {/* Right Column: Key Details & Purchase Options */}
                         <div className="lg:col-span-7 flex flex-col gap-6 w-full mt-6 lg:mt-0">
                             <nav className="flex gap-2 text-[#c7c4d7] text-[13px] font-semibold uppercase tracking-wider font-['Geist']">
-                                <span>Accounts</span>
+                                <span>Products</span>
                                 <span className="text-[#464554]">/</span>
-                                <span className="text-[#c0c1ff]">Google Services</span>
+                                <span className="text-[#c0c1ff]">{product.category}</span>
                             </nav>
 
                             <h1 className="text-[36px] md:text-[44px] font-bold text-white leading-[1.15] font-['Geist'] tracking-tight">
-                                Premium Gmail Account Bundle
+                                {product.title}
                             </h1>
 
                             <div className="flex flex-wrap items-center gap-3 text-[#c7c4d7]">
                                 <span className="text-[13px] font-semibold bg-[#1b1b23] px-3 py-1 rounded-lg font-['Geist'] border border-[#464554]/30">
-                                    ID: GM-99203-PR
+                                    ID: {product._id}
                                 </span>
                                 <div className="flex items-center gap-1 text-[13px]">
                                     <span
@@ -141,44 +176,26 @@ export default function ProductDetailsPage() {
 
                             {/* Feature Badges Grid */}
                             <div className="grid grid-cols-3 gap-3">
-                                <div className="flex flex-col md:flex-row items-center md:items-start gap-2 p-3 bg-white text-black rounded-xl">
-                                    <span
-                                        className="material-symbols-outlined text-indigo-600 text-[20px] mt-0.5"
-                                        style={iconStyle}
-                                    >
-                                        bolt
-                                    </span>
-                                    <div className="flex flex-col text-center md:text-left">
-                                        <span className="text-[12px] font-medium text-gray-500">Delivery</span>
-                                        <span className="font-bold text-[12px] -mt-0.5">Instant</span>
-                                    </div>
-                                </div>
-                                <div className="flex flex-col md:flex-row items-center md:items-start gap-2 p-3 bg-white text-black rounded-xl">
-                                    <span
-                                        className="material-symbols-outlined text-indigo-600 text-[20px] mt-0.5"
-                                        style={iconStyle}
-                                    >
-                                        security
-                                    </span>
-                                    <div className="flex flex-col text-center md:text-left">
-                                        <span className="text-[12px] font-medium text-gray-500">Warranty</span>
-                                        <span className="font-bold text-[12px] -mt-0.5">24/7 Policy</span>
-                                    </div>
-                                </div>
-                                <div className="flex flex-col md:flex-row items-center md:items-start gap-2 p-3 bg-white text-black rounded-xl">
-                                    <span
-                                        className="material-symbols-outlined text-indigo-600 text-[20px] mt-0.5"
-                                        style={iconStyle}
-                                    >
-                                        check_circle
-                                    </span>
-                                    <div className="flex flex-col text-center md:text-left">
-                                        <span className="text-[12px] font-medium text-gray-500">Status</span>
-                                        <span className="font-bold text-[12px] text-emerald-600 -mt-0.5">
-                                            OTP Ready
-                                        </span>
-                                    </div>
-                                </div>
+                                {product.features.slice(0, 3).map((feature, i) => {
+                                    const icons = ["bolt", "security", "check_circle"]
+                                    return (
+                                        <div
+                                            key={i}
+                                            className="flex flex-col md:flex-row items-center md:items-start gap-2 p-3 bg-white text-black rounded-xl"
+                                        >
+                                            <span
+                                                className="material-symbols-outlined text-indigo-600 text-[20px] mt-0.5"
+                                                style={iconStyle}
+                                            >
+                                                {icons[i] ?? "check_circle"}
+                                            </span>
+                                            <div className="flex flex-col text-center md:text-left">
+                                                <span className="text-[12px] font-medium text-gray-500">Feature</span>
+                                                <span className="font-bold text-[12px] -mt-0.5">{feature}</span>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                             </div>
 
                             {/* Quantity Selector & Action Button */}
@@ -199,7 +216,7 @@ export default function ProductDetailsPage() {
                                             value={quantity}
                                             min="1"
                                             onChange={handleInputChange}
-                                            onBlur={handleBlur}
+                                            onBlur={(e) => handleInputChange(e as ChangeEvent<HTMLInputElement>)}
                                             className="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-white outline-none text-[15px]"
                                         />
                                         <button
@@ -220,7 +237,7 @@ export default function ProductDetailsPage() {
                                     <span className="text-[28px] font-bold text-white font-['Geist']">৳{total}</span>
                                 </div>
 
-                                <button className="w-full md:w-auto px-10 py-3.5 bg-gradient-to-r from-[#9aa3ff] to-[#a3baff] text-slate-900 font-bold rounded-xl text-[15px] transition-all hover:opacity-90">
+                                <button className="w-full md:w-auto px-10 py-3.5 bg-linear-to-r from-[#9aa3ff] to-[#a3baff] text-slate-900 font-bold rounded-xl text-[15px] transition-all hover:opacity-90">
                                     Login to Purchase
                                 </button>
                             </div>
@@ -269,42 +286,27 @@ export default function ProductDetailsPage() {
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                             {/* Left Details */}
                             <div className="lg:col-span-8 space-y-6">
-                                <h3 className="text-[22px] font-bold text-white">
-                                    High-Quality Digital Infrastructure
-                                </h3>
+                                <h3 className="text-[22px] font-bold text-white">{product.title}</h3>
                                 <p className="text-[#8c8a9e] leading-[1.6] text-[15px]">
-                                    Our Premium Gmail Bundle provides high-authority accounts created under strictly
-                                    monitored environments. Ideal for marketing automation, outreach campaigns, and
-                                    secure cloud storage. Every account in this bundle is verified via a unique OTP and
-                                    maintains a high reputation score with search engines.
+                                    {product.description ??
+                                        `${product.title} — ${product.category} category theke, high quality o verified. Instant delivery, warranty soho purchase korte paren.`}
                                 </p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="flex items-start gap-4 p-4 border border-[#464554]/20 bg-[#1b1b23] rounded-xl">
-                                        <div className="bg-[#8083ff]/10 p-2 rounded-lg shrink-0 flex items-center justify-center text-[#c0c1ff]">
-                                            <span className="material-symbols-outlined" style={iconStyle}>
-                                                history
-                                            </span>
+                                    {product.features.map((feature, i) => (
+                                        <div
+                                            key={i}
+                                            className="flex items-start gap-4 p-4 border border-[#464554]/20 bg-[#1b1b23] rounded-xl"
+                                        >
+                                            <div className="bg-[#8083ff]/10 p-2 rounded-lg shrink-0 flex items-center justify-center text-[#c0c1ff]">
+                                                <span className="material-symbols-outlined" style={iconStyle}>
+                                                    check_circle
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-white text-[15px]">{feature}</h4>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-white text-[15px]">Aged Accounts</h4>
-                                            <p className="text-[12px] text-[#8c8a9e] mt-1">
-                                                All accounts are 6+ months old for maximum stability.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-4 p-4 border border-[#464554]/20 bg-[#1b1b23] rounded-xl">
-                                        <div className="bg-[#8083ff]/10 p-2 rounded-lg shrink-0 flex items-center justify-center text-[#c0c1ff]">
-                                            <span className="material-symbols-outlined" style={iconStyle}>
-                                                public
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-white text-[15px]">Global Compatibility</h4>
-                                            <p className="text-[12px] text-[#8c8a9e] mt-1">
-                                                Compatible with any residential or mobile proxy service.
-                                            </p>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
 
@@ -313,12 +315,7 @@ export default function ProductDetailsPage() {
                                 <div className="bg-[#1b1b23] p-6 rounded-2xl border border-[#464554]/20">
                                     <h4 className="font-bold mb-4 text-white text-[16px]">Quick Highlights</h4>
                                     <ul className="space-y-3.5">
-                                        {[
-                                            "Instant Dashboard Delivery",
-                                            "Recovery Email Attached",
-                                            "No Phone Verification Needed",
-                                            "Clean Login History"
-                                        ].map((text, i) => (
+                                        {product.features.map((text, i) => (
                                             <li key={i} className="flex items-center gap-2.5 text-[14px]">
                                                 <span
                                                     className="material-symbols-outlined text-emerald-400 text-[18px]"
@@ -338,11 +335,11 @@ export default function ProductDetailsPage() {
                     {activeTab === "specs" && (
                         <div className="max-w-3xl divide-y divide-[#464554]/20 w-full">
                             {[
-                                { title: "Validity", desc: "Lifetime Access (Subject to Google TOS)" },
-                                { title: "Delivery Method", desc: "Automatic CSV download via Dashboard" },
-                                { title: "Access Type", desc: "Full Credentials (Email + Password + Recovery)" },
-                                { title: "Quantity", desc: "5 Accounts per Bundle" },
-                                { title: "IP Restriction", desc: "No Restriction (Global usage allowed)" }
+                                { title: "Category", desc: product.category },
+                                { title: "Stock Status", desc: product.stock },
+                                { title: "Badge", desc: product.badge },
+                                { title: "Price", desc: `৳${product.price}` },
+                                { title: "Original Price", desc: `৳${product.originalPrice}` }
                             ].map((spec, i) => (
                                 <div key={i} className="grid grid-cols-1 md:grid-cols-3 py-3.5 text-[14px]">
                                     <span className="font-bold text-[#8c8a9e]">{spec.title}</span>
@@ -445,7 +442,7 @@ export default function ProductDetailsPage() {
                     <p className="text-[11px] text-[#8c8a9e] font-semibold">Total Price</p>
                     <p className="text-[18px] font-bold text-[#c0c1ff]">৳{total}</p>
                 </div>
-                <button className="px-6 py-2 bg-gradient-to-r from-[#9aa3ff] to-[#a3baff] text-slate-900 font-bold rounded-xl text-[14px]">
+                <button className="px-6 py-2 bg-linear-to-r from-[#9aa3ff] to-[#a3baff] text-slate-900 font-bold rounded-xl text-[14px]">
                     Purchase
                 </button>
             </div>

@@ -1,4 +1,5 @@
 import React from "react"
+import Image from "next/image"
 import { ArrowRight, CircleCheckFill, ShoppingCart } from "@gravity-ui/icons"
 import Link from "next/link"
 
@@ -50,6 +51,7 @@ export default async function FeaturedProducts() {
         badge: string
         popular: boolean
         stock: string
+        slug: string
     }
 
     let products: Product[] = []
@@ -65,7 +67,7 @@ export default async function FeaturedProducts() {
     } catch (error) {
         console.error("Error fetching products:", error)
         return (
-            <section className="py-20 px-[32px] max-w-[1280px] mx-auto">
+            <section className="py-20 px-8 max-w-7xl mx-auto">
                 <div className="flex justify-between items-end mb-12">
                     <div>
                         <h2 className="font-['Geist'] text-[32px] font-semibold leading-[1.2] tracking-[-0.01em] text-[#e4e1ed]">
@@ -83,7 +85,7 @@ export default async function FeaturedProducts() {
     }
 
     return (
-        <section className="py-20 px-[32px] max-w-[1280px] mx-auto">
+        <section className="py-20 px-8 max-w-7xl mx-auto">
             <div className="flex justify-between items-end mb-12">
                 <div>
                     <h2 className="font-['Geist'] text-[32px] font-semibold leading-[1.2] tracking-[-0.01em] text-[#e4e1ed]">
@@ -96,10 +98,10 @@ export default async function FeaturedProducts() {
                 </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {products.map((product: Product, idx: number) => (
+                {products.map((product: Product) => (
                     <Link
-                        href={`/products/${product._id}`}
-                        key={idx}
+                        href={`/products/${product.slug}`}
+                        key={product._id}
                         className="group flex flex-col h-full bg-[#1f1f27] rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(15,23,42,0.1)] shadow-[0_4px_12px_rgba(15,23,42,0.05)] border border-[#464554]/10 relative"
                     >
                         {product.popular && (
@@ -110,13 +112,15 @@ export default async function FeaturedProducts() {
                             </div>
                         )}
                         <div className="aspect-video relative overflow-hidden bg-[#1f1f27]">
-                            <img
+                            <Image
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 alt={product.title}
                                 src={product.img}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 33vw"
                             />
                         </div>
-                        <div className="p-6 flex flex-col flex-grow">
+                        <div className="p-6 flex flex-col grow">
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">
                                     IN STOCK
@@ -129,7 +133,7 @@ export default async function FeaturedProducts() {
                             <div className="space-y-2 mb-6">
                                 {product.features.map((feature, fIdx) => (
                                     <div key={fIdx} className="flex items-center gap-2 text-[13px] text-[#c7c4d7]">
-                                        <CircleCheckFill className="w-[18px] h-[18px] text-green-600 shrink-0" />
+                                        <CircleCheckFill className="w-4.5 h-4.5 text-green-600 shrink-0" />
                                         {feature}
                                     </div>
                                 ))}
