@@ -69,7 +69,7 @@ export default function Header() {
                             /* User Profile Avatar */
                             <div className="flex gap-2">
                                 <Link
-                                    href="/profile"
+                                    href="/dashboard/profile"
                                     className="w-16 h-10 rounded-full border border-[#464554]/60 overflow-hidden hover:border-[#c0c1ff] transition-all focus:outline-none"
                                 >
                                     <Image

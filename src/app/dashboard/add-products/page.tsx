@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, FormEvent, ChangeEvent } from "react"
+import { useState, FormEvent, ChangeEvent } from "react"
 import { useRouter } from "next/navigation"
 
 interface ItemFormData {
@@ -15,7 +15,6 @@ interface ItemFormData {
 
 export default function AddItemPage() {
     const router = useRouter()
-    const [loading, setLoading] = useState(true)
 
     const [formData, setFormData] = useState<ItemFormData>({
         title: "",
@@ -69,7 +68,7 @@ export default function AddItemPage() {
     }
 
     return (
-        <div className="bg-[#13131b] font-['Inter'] text-[#e4e1ed] min-h-screen w-full flex items-center justify-center p-4 relative overflow-x-hidden">
+        <div className="bg-[#13131b] font-['Inter'] text-[#e4e1ed] min-h-screen w-full flex items-center justify-center p-2 relative overflow-hidden">
             <link
                 href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
                 rel="stylesheet"

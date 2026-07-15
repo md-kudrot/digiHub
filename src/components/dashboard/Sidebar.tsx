@@ -1,5 +1,7 @@
 "use client"
+import { authClient } from "@/lib/auth-client"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 
 interface MenuItem {
     id: string
@@ -15,8 +17,19 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ menuItems, pathname, iconStyle }: SidebarProps) {
+    const { refetch } = authClient.useSession()
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    refetch()
+                    redirect("/login")
+                }
+            }
+        })
+    }
     return (
-        <aside className="hidden md:flex flex-col w-64 bg-[#1b1b23] border-r border-[#464554]/20 p-6 shrink-0 z-20 sticky top-0 h-screen">
+        <aside className="hidden md:flex flex-col w-64  border-r border-[#464554]/20 p-6 shrink-0 z-20 sticky top-0 h-full">
             <div className="mb-8">
                 <Link href="/" className="font-['Geist'] text-[32px] tracking-[-0.02em] font-bold text-[#c0c1ff]">
                     Nexus.
@@ -51,7 +64,10 @@ export default function Sidebar({ menuItems, pathname, iconStyle }: SidebarProps
 
             {/* Sidebar Footer / Logout */}
             <div className="pt-4 border-t border-[#464554]/20">
-                <button className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-rose-400 font-medium text-[14px] font-['Geist'] hover:bg-rose-500/10 transition-all">
+                <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-rose-400 font-medium text-[14px] font-['Geist'] hover:bg-rose-500/10 transition-all"
+                >
                     <span className="material-symbols-outlined text-[20px]" style={iconStyle}>
                         logout
                     </span>

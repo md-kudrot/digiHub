@@ -17,8 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const menuItems = [
         { id: "overview", label: "Overview", icon: "dashboard", href: "/dashboard" },
         { id: "add", label: "Add Product", icon: "add", href: "/dashboard/add-products" },
-        { id: "wallet", label: "Wallet & Funds", icon: "account_balance_wallet", href: "/dashboard/wallet" },
-        { id: "settings", label: "Settings", icon: "settings", href: "/dashboard/settings" }
+        { id: "Profile", label: "Profile", icon: "person", href: "/dashboard/profile" }
     ]
 
     return (
