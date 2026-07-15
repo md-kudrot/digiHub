@@ -121,7 +121,7 @@ export default function FilterSortBar() {
 
     return (
         <div className="bg-[#1f1f27] p-[16px] rounded-2xl shadow-sm border border-[#464554] mb-[24px] sticky top-24 z-40">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-[24px]">
+            <div className="">
                 {/* Filters */}
                 <div className="flex flex-wrap items-center gap-3">
                     {/* Category Dropdown */}
@@ -262,7 +262,7 @@ export default function FilterSortBar() {
                 </div>
 
                 {/* Sorting */}
-                <div className="flex items-center gap-3 min-w-[200px]">
+                <div className="mt-5 flex items-center gap-3 min-w-[200px]">
                     <span className="font-['Geist'] text-[14px] font-semibold leading-[1.4] tracking-[0.05em] text-[#c7c4d7] whitespace-nowrap">
                         Sort by:
                     </span>

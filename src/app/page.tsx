@@ -1,4 +1,3 @@
-import CategoryPillBar from "@/components/CategoryPillBar"
 import FaqSection from "@/components/FaqSection"
 import FeaturedProducts from "@/components/FeaturedProducts"
 import FeaturesSection from "@/components/FeaturesSection"
@@ -11,7 +10,6 @@ export default function Home() {
     return (
         <main className="mt-20">
             <HeroSection />
-            <CategoryPillBar />
             <FeaturedProducts />
             <FeaturesSection />
             <StatsSection />
