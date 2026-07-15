@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from './Header';
 import HeroSection from './HeroSection';
-import CategoryPillBar from './CategoryPillBar';
 import FeaturedProducts from './FeaturedProducts';
 import FeaturesSection from './FeaturesSection';
 import StatsSection from './StatsSection';
@@ -16,7 +15,6 @@ export default function NexusMarketplace() {
       <Header />
       <main className="mt-20">
         <HeroSection />
-        <CategoryPillBar />
         <FeaturedProducts />
         <FeaturesSection />
         <StatsSection />
