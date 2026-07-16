@@ -25,7 +25,7 @@ export default async function FeaturedProducts() {
             headers: {
                 "Content-Type": "application/json"
             },
-            cache: "no-store"
+            next: { revalidate: 60 }
         })
         products = await data.json()
     } catch (error) {

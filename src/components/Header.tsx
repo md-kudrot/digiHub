@@ -38,7 +38,7 @@ export default function Header() {
                         className="font-['Geist'] text-[48px] leading-[1.1] tracking-[-0.02em] font-bold text-[#c0c1ff]"
                         href="/"
                     >
-                        Nexus.
+                        DigiHub
                     </Link>
                     <nav className="hidden md:flex items-center gap-6">
                         <Link
