@@ -11,13 +11,13 @@ interface NavbarProps {
 export default function Navbar({ isMobileMenuOpen, setIsMobileMenuOpen }: NavbarProps) {
     const { data: session } = authClient.useSession()
 
-    const user = session?.user
+    const user = session?.userlo
     return (
         <header className="fixed md:sticky top-0 w-full z-50 bg-[#13131b]/80 backdrop-blur-md border-b border-[#464554]/30 h-20 flex items-center justify-between px-6 md:px-8">
             <div className="flex items-center gap-4">
                 {/* Mobile Logo */}
                 <Link href="/" className="md:hidden font-['Geist'] text-[32px] font-bold text-[#c0c1ff]">
-                    Nexus.
+                    Dgihub
                 </Link>
                 <h2 className="hidden md:block text-[18px] font-bold text-white font-['Geist']">Client Portal</h2>
             </div>

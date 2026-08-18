@@ -35,7 +35,7 @@ export default function Header() {
             <div className="flex items-center justify-between px-[32px] h-20 max-w-[1280px] mx-auto">
                 <div className="flex items-center gap-8">
                     <Link
-                        className="font-['Geist'] text-[48px] leading-[1.1] tracking-[-0.02em] font-bold text-[#c0c1ff]"
+                        className="font-['Geist'] text-[24px] leading-[1.1] tracking-[-0.02em] font-bold text-[#c0c1ff]"
                         href="/"
                     >
                         DigiHub
@@ -52,12 +52,6 @@ export default function Header() {
                             href="/products"
                         >
                             Products
-                        </Link>
-                        <Link
-                            className={`text-[#c0c1ff] font-bold border-b-2 ${pathname === "/categories" ? "border-[#c0c1ff]" : "border-transparent"}  font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]`}
-                            href="/categories"
-                        >
-                            Categories
                         </Link>
                     </nav>
                 </div>
@@ -160,12 +154,6 @@ export default function Header() {
                         href="/products"
                     >
                         Products
-                    </Link>
-                    <Link
-                        className={`text-[#c0c1ff] font-bold border-b-2 ${pathname === "/categories" ? "border-[#c0c1ff]" : "border-transparent"} pb-1 font-['Geist'] text-[14px] leading-[1.4] tracking-[0.05em]`}
-                        href="/categories"
-                    >
-                        Categories
                     </Link>
 
                     <div className="flex flex-col gap-3 mt-2 border-t border-[#464554]/30 pt-4">

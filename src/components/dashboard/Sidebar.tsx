@@ -33,7 +33,7 @@ export default function Sidebar({ menuItems, pathname }: SidebarProps) {
         <aside className="hidden md:flex flex-col w-64  border-r border-[#464554]/20 p-6 shrink-0 z-20 sticky top-0 h-full">
             <div className="mb-8">
                 <Link href="/" className="font-['Geist'] text-[32px] tracking-[-0.02em] font-bold text-[#c0c1ff]">
-                    Nexus.
+                    Digihub
                 </Link>
                 <p className="text-[11px] text-[#8c8a9e] tracking-widest uppercase font-semibold mt-1 font-['Geist']">
                     Dashboard
